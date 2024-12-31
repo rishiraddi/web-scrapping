@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trending Topics</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        .json-extract {
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trending Topics</h1>
+
+    <p><a href="#" id="runScriptLink" onclick="app.py">Click here to run the script.</a></p>
+
+    <div id="resultContainer" style="display: none;">
+        <p>These are the most happening topics as on <span id="dateTime"></span></p>
+        <ul>
+            <li id="trend1">Name of trend1</li>
+            <li id="trend2">Name of trend2</li>
+            <li id="trend3">Name of trend3</li>
+            <li id="trend4">Name of trend4</li>
+            <li id="trend5">Name of trend5</li>
+        </ul>
+        <p>The IP address used for this query was <span id="ipAddress"></span>.</p>
+        <p>Here's a JSON extract of this record from the MongoDB:</p>
+        <div class="json-extract" id="jsonExtract"></div>
+    </div>
+
+    <p><a href="#" id="runQueryAgainLink" style="display: none;">Click here to run the query again.</a></p>
+
+    <script>
+        document.getElementById('runScriptLink').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // Replace with your actual data fetching logic
+            fetch('app.py') // Assuming your backend endpoint is '/get_trending_topics'
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('dateTime').textContent = data.dateTime;
+                    document.getElementById('trend1').textContent = data.trend1;
+                    document.getElementById('trend2').textContent = data.trend2;
+                    document.getElementById('trend3').textContent = data.trend3;
+                    document.getElementById('trend4').textContent = data.trend4;
+                    document.getElementById('trend5').textContent = data.trend5;
+                    document.getElementById('ipAddress').textContent = data.ipAddress;
+                    document.getElementById('jsonExtract').textContent = JSON.stringify(data, null, 4); // Indent JSON for readability
+
+                    // Show the result container and hide the initial link
+                    document.getElementById('resultContainer').style.display = 'block';
+                    document.getElementById('runScriptLink').style.display = 'none';
+
+                    // Show the "Run Query Again" link
+                    document.getElementById('runQueryAgainLink').style.display = 'inline';
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+
+        document.getElementById('runQueryAgainLink').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // Clear the result container
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('trend1').textContent = "Name of trend1";
+            document.getElementById('trend2').textContent = "Name of trend2";
+            document.getElementById('trend3').textContent = "Name of trend3";
+            document.getElementById('trend4').textContent = "Name of trend4";
+            document.getElementById('trend5').textContent = "Name of trend5";
+            document.getElementById('dateTime').textContent = "";
+            document.getElementById('ipAddress').textContent = "";
+            document.getElementById('jsonExtract').textContent = "";
+
+            // Show the initial link and hide the "Run Query Again" link
+            document.getElementById('runScriptLink').style.display = 'inline';
+            document.getElementById('runQueryAgainLink').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
